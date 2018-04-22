@@ -1,0 +1,11 @@
+{
+  "name": "testmap",
+  "version": "0.0.1",
+  "description": "leaflet map",
+  "main": "map.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bynothing",
+  "license": "ISC"
+}

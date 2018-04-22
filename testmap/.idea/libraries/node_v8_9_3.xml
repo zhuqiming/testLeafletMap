@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="node-v8.9.3" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://E:/文档资料/node-v8.9.3/node-v8.9.3" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://E:/文档资料/node-v8.9.3/node-v8.9.3" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

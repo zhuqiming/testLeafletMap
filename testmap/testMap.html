@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <script src="leaflet/leaflet-src.js"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/china.js"></script>
+    <style type="text/css">
+        .map{
+            width:1000px;
+            height:800px;
+        }
+    </style>
+</head>
+<body>
+    <p> leaflet demo</p>
+    <div id="map" class="map"></div>
+</body>
+<!--<script src="map.js"></script>-->
+<script>
+    var mapData;
+    var map = L.map('map',{
+        crs:L.CRS.Simple,
+        center:[121.4646,31.2192],
+        zoom:1,
+        minZoom:0,
+        maxZoom:18
+    });
+    var popup = L.popup();
+    //设置地理中心和缩放级别
+    function getColor(properties) {
+        if(properties.power) {
+            return "#EA0000";
+        }else if(properties.building) {
+            return "#9393FF";
+        }else if(properties.natural) {
+            return "#D2E9FF";
+        }else if(properties.highway) {
+            return "#CCFF00";
+        }else if(properties.railway) {
+            return "#4F4F4F";
+        }else if(properties.boundary) {
+            return "#000000";
+        }else if(properties.name) {
+            return "#80FFFF";
+        }else {
+            return "#000000" ;
+        }
+    }
+    function style(feature) {
+        return {
+            fillColor: getColor(feature.properties),//
+            weight: 2,
+            opacity: 1,
+            color: '#ff7800',
+            fillOpacity: 0.7
+        };
+    }
+    function showMsg(e) {
+        // console.log(e.target);
+        var mapObj = e.target;
+        var type = mapObj.feature.geometry.type;//获取地图元素的类型(点、线、面、多点等等类型)
+        var feature = mapObj.feature;//获取地图元素的特征
+        switch(type) {
+            case 'Point':
+                if(feature.properties.name) {
+                    mapObj.bindPopup(feature.properties.name).openPopup();
+                }
+                break;
+            case 'MultiPoint':
+                break;
+            case 'LineString':
+
+            case 'MultiLineString':
+                if(feature.properties.name) {
+                    mapObj.bindPopup(feature.properties.name).openPopup();
+                }
+                break;
+            case 'Polygon':
+            case 'MultiPolygon':
+                if(feature.properties.name) {
+                    mapObj.bindPopup(feature.properties.name).openPopup();
+                }
+                break;
+            default:
+                mapObj.bindPopup("未知的类型").openPopup();
+        }
+    }
+
+    function onEachFeature(feature, layer) {//遍历每一个数据，也就是为每一个地点加上监听器
+        layer.on({
+            mouseover:showMsg
+        });
+    }
+    $.getJSON('./data/home.geojson',function(data){
+
+        mapData = data;
+        // console.log(d);
+        //创建GeoJSON 图层
+        $.each(mapData.features,function(i,item) {
+
+            if(!item.geometry.type) {
+                return true;
+            }
+            var geo = L.geoJSON(item,{
+                style:style,
+                onEachFeature:onEachFeature
+            }).addTo(map);
+            console.log(i+"  "+geo);
+            map.on("click",function(e) {
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent("lan_lng: " + e.latlng.toString())
+                    .openOn(map);
+            })
+        });
+    });
+</script>
+</html>
